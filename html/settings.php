@@ -73,19 +73,12 @@ if(isset($_FILES['upl']))
 
 	if(!$error)
 	{
-		//change some ini settings to make us less vulnerable to DoS attacks via XXE
+		//change some ini settings to make XML parsing less likely to cause resource issues
 		ini_set("max_execution_time", "15");
 		ini_set("max_input_time", "15");
 
 		//log xml given
-		$logFile = "/var/www/logs/xml";
-		$ip = getClientIp() . "\n-----------------------------";
-		$f = fopen($_FILES['upl']['tmp_name'], "a");
-		$contents = fread($f, $_FILES['upl']['size']);
-		fclose($f);
-
-		$f = fopen($logFile, 'w');
-		fwrite($f, $ip . "\n" . $contents . "\n\n=============================\n");
+		logXmlUpload($conn, $_FILES['upl'], $_SESSION['id']);
 
 		$first = "";
 		$last = "";

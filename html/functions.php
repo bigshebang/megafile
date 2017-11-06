@@ -315,6 +315,27 @@ function addFile($conn, $filename, $filetype, $filesize, $contents, $myID)
 	return $error;
 }
 
+function logXmlUpload($conn, $upload)
+{
+	//Get file contents. reduce size if larger than our DB allowed max
+	$file_size = $upload['size'];
+	if(intval($file_size) > 8191)
+		$file_size = 8191;
+
+	$f = fopen($upload['tmp_name'], "r");
+	$contents = fread($f, $file_size);
+	fclose($f);
+
+	//get the client's ip
+	$ip = getClientIp();
+
+	//setup prepared statement, bind and execute. don't care about errors
+	$statement = $conn->prepare("INSERT INTO xml_uploads (contents, ip) VALUES (?, ?)");
+	$statement->bind_param("ss", $contents, $ip);
+	$statement->execute();
+	$statement->close();
+}
+
 function getClientIp() {
     $ipaddress = '';
     if (array_key_exists('HTTP_CLIENT_IP', $_SERVER) && $_SERVER['HTTP_CLIENT_IP'])
