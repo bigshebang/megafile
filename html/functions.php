@@ -1,12 +1,23 @@
 <?php
 
 function connect_to_db($find = 0){
+	$db_config = parse_ini_file("../config.ini", true)['sql']; #get settings from config file
+
+	//need to determine which user we need here so we get the right user and pass
+	//TODO: change these from numbers to strings
+	$usertype = "";
 	if($find == 1)
-		return new mysqli("localhost", "mf-dba-upload", "ThisIsMuhUPLOADpassword!", "MegaFile");
+		$usertype = "_upload";
 	else if($find == 2)
-		return new mysqli("localhost", "mf-dba-del", "ThisIsMuhDELpassword!", "MegaFile");
-	else
-		return new mysqli("localhost", "mf-dba", "ThisIsMuhDBpassword!", "MegaFile");
+		$usertype = "_del";
+
+	return new mysqli(
+		$db_config['host'],
+		$db_config['db' . $usertype . '_user'],
+		$db_config['db' . $usertype . '_password'],
+		$db_config['db_table'],
+		$db_config['port']
+	);
 }
 
 function register_user($conn, $username, $password, $first, $last, $admin = 0){
@@ -20,7 +31,7 @@ function register_user($conn, $username, $password, $first, $last, $admin = 0){
 	$statement->bind_param("ssssi", $username, $pass, $first, $last, $admin);
 	$statement->execute();
     if($statement->error)
-        $result = $statement->error."<br />".$sql;
+        $result = $statement->error."<br />"; #.$sql;
     else
         $result = $statement->insert_id;
 
