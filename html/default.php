@@ -2,11 +2,11 @@
 					<!-- Top Navigation -->
 					<div class="container page-seperator">
 					<section class="color bgi">
-						<div class="container"> 
+						<div class="container">
 						<div class="banneer-text">
 						<h3>Premier Cloud Storage.</h3>
 						<h4>Giving you what you need.</h4>
-							
+
 						<button onclick="$('#features')[0].scrollIntoView(true);" type="button" class="btn btn-warning but1">Learn how</button>
 						<p>We provide what the other guys don't: the best cloud storage platform available on the internet. No one beats our product.</p>
 						</div>
@@ -17,14 +17,13 @@
 								<input class="name" type="text" name="lastname" placeholder="Last Name">
 								<input class="nuber" type="password" name="password" placeholder="Password">
 								<input class="nuber" type="password" name="repassword" placeholder="Confirm Password">
-								<!--<button class="btn btn-info mrgn-can">Clear</button>-->
-								<button type="submit" class="btn btn-info mrgn-can">Sign up</button>
+								<button type="submit" class="btn btn-info mrgn-center">Sign up</button>
 							</form>
 						</div>
 						<div class="clearfix"> </div>
 					</section>
 					<section class="col-3 ss-style-doublediagonal our-features">
-							<div class="container"> 
+							<div class="container">
 							<h2 id="features">Our features</h2>
 							<p>Providing the world's leading cloud storage features since the beginning.</p>
 							<div class="col-md-4 column our-feat">
