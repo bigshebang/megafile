@@ -40,11 +40,15 @@ if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['repas
 	{
 		$name = strtolower($username);
 		$result = register_user($conn, $name, $password, $first, $last);
-		session_start();
-		$_SESSION['id'] = $result;
-		$_SESSION['first'] = $first;
-		header("Location: /");
-		die();
+		if(!is_int($result)){
+			$error = "Unknown problem with registration...";
+		} else {
+			session_start();
+			$_SESSION['id'] = $result;
+			$_SESSION['first'] = $first;
+			header("Location: /");
+			die();
+		}
 	}
 }
 
