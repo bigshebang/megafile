@@ -452,6 +452,20 @@ i.glyphicon.glyphicon-arrow-right {
 }
 button.btn.btn-info.mrgn-center {
   margin-right: 35%;
+  background-color: #71c6c1 !important;
+  outline: none !important;
+  border: none !important;
+  /*position: absolute;*/
+  /*    bottom: 13.5em;*/
+  /*margin-top: 6px;*/
+  /*right: 18.5em;*/
+  /*padding: 10px 48px;*/
+  font-size: 1.1em;
+  transition: 0.5s all;
+  -webkit-transition: 0.5s all;
+  -moz-transition: 0.5s all;
+  -o-transition: 0.5s all;
+  -ms-transition: 0.5s all;
 }
 
 button.btn.btn-info.mrgn-can {
@@ -775,6 +789,7 @@ figure.effect-bubba:hover p {
 .ss-style-doublediagonal {
   background: #5482ab !important;
   position: relative;
+  padding-top: 2%;
   /*    margin: 0em 0 6em;*/
 }
 .abt-img {
