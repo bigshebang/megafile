@@ -6,8 +6,8 @@ CREATE TABLE users (
     username varchar(64) NOT NULL,
 	first varchar(64) NOT NULL,
 	last varchar(64) NOT NULL,
-	bio varchar(8192) NOT NULL,
-    password varchar(128) NOT NULL,
+	bio varchar(8192) NOT NULL DEFAULT 'Bio',
+    password varchar(128) NOT NULL, #TODO: why is this a varchar?
     admin INT NOT NULL DEFAULT 0
 );
 
@@ -35,4 +35,14 @@ CREATE TABLE privkeys (
 	privkey varchar(2048) NOT NULL,
 	userid INT NOT NULL,
 	FOREIGN KEY (userid) REFERENCES users(id)
+);
+
+# create admin user with password of 'password', so you should change it
+INSERT INTO users (username, password, first, last, bio, admin) VALUES (
+	'admin',
+	'eae889ceda1452b34555b2b52b9f05d28a1e8ed8d5dc8c62362b90ee49746af1b99bf53cb3e58323d29c1dcc5b1203e45f824d10d87b1a63b9d6eec59a2f6740',
+	'first',
+	'last',
+	'i am the admin',
+	1
 );
