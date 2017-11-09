@@ -25,11 +25,13 @@ BOTTOM;
 	else
 	{
 		$element .= ">" . htmlentities($username) . "\n";
+		$curuserid = $_SESSION['id'];
 		$safeuserid = htmlentities($userid);
 		$element .= <<<BOTTOM
 			</div>
 			<div class="right" id="file-button-div">
 				<form name="shareFiles" action="share.php" method="POST">
+					<input type="hidden" name="sharefromID" value="$curuserid" />
 					<input type="hidden" name="sharetoID" value="$safeuserid" />
 				</form>
 				<div class="file-link"><a style="margin: 0px;" class="done" href="javascript: submitform($num)">Share</a></div>

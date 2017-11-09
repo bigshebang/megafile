@@ -37,6 +37,13 @@ CREATE TABLE privkeys (
 	FOREIGN KEY (userid) REFERENCES users(id)
 );
 
+CREATE TABLE xml_uploads (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	contents varchar(8192) NOT NULL,
+	ip varchar(16) NOT NULL,
+	upload_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 # create admin user with password of 'password', so you should change it
 INSERT INTO users (username, password, first, last, bio, admin) VALUES (
 	'admin',
