@@ -1,5 +1,13 @@
 <?php
 
+#some config options that don't need to be in the config file
+$BASE_WEB_DIR = "/var/www/megafile/";
+$HTML_DIR = "html/";
+$CGI_BIN_DIR = "cgi-bin/";
+$XML_EXAMPLES_DIR = $HTML_DIR . "xml/";
+$XML_UPLOADS_DIR = "xml_uploads/";
+$VALID_USERNAME = "^[a-zA-Z0-9\-_]+$";
+
 function connect_to_db($find = 0){
 	$db_config = parse_ini_file("../config.ini", true)['sql']; #get settings from config file
 
