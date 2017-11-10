@@ -6,7 +6,7 @@ $HTML_DIR = "html/";
 $CGI_BIN_DIR = "cgi-bin/";
 $XML_EXAMPLES_DIR = $HTML_DIR . "xml/";
 $XML_UPLOADS_DIR = "xml_uploads/";
-$VALID_USERNAME = "^[a-zA-Z0-9\-_]+$";
+$VALID_USERNAME = "/^[a-zA-Z0-9\-_]+$/";
 
 function connect_to_db($find = 0){
 	$db_config = parse_ini_file("../config.ini", true)['sql']; #get settings from config file
@@ -23,7 +23,7 @@ function connect_to_db($find = 0){
 		$db_config['host'],
 		$db_config['db' . $usertype . '_user'],
 		$db_config['db' . $usertype . '_password'],
-		$db_config['db_table'],
+		$db_config['db'],
 		$db_config['port']
 	);
 }
@@ -329,7 +329,7 @@ function addFile($conn, $filename, $filetype, $filesize, $contents, $myID)
 	return $error;
 }
 
-function logXmlUpload($conn, $upload)
+function logXmlUpload($conn, $upload, $id)
 {
 	//Get file contents. reduce size if larger than our DB allowed max
 	$file_size = $upload['size'];
@@ -344,8 +344,8 @@ function logXmlUpload($conn, $upload)
 	$ip = getClientIp();
 
 	//setup prepared statement, bind and execute. don't care about errors
-	$statement = $conn->prepare("INSERT INTO xml_uploads (contents, ip) VALUES (?, ?)");
-	$statement->bind_param("ss", $contents, $ip);
+	$statement = $conn->prepare("INSERT INTO xml_uploads (contents, ip, uploader_id) VALUES (?, ?, ?)");
+	$statement->bind_param("sss", $contents, $ip, $id);
 	$statement->execute();
 	$statement->close();
 }
