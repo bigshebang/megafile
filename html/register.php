@@ -25,6 +25,8 @@ if(isset($_POST['username']) && isset($_POST['password']) && isset($_POST['repas
 		$error = "Username must not be blank.";
 	else if(strlen($username) > 64)
 		$error = "Username cannot be longer than 64 characters.";
+	else if(!preg_match($VALID_USERNAME, $username))
+		$error = "Username can only be alphanumeric";
 	else if(check_user($conn, strtolower($username))) //check if user exists
 		$error = "That username already exists.";
 	else if($password == "")
