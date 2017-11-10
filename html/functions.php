@@ -28,6 +28,12 @@ function connect_to_db($find = 0){
 	);
 }
 
+function set_login_session_values($id, $username, $first){
+	$_SESSION['id'] = $id;
+	$_SESSION['username'] = $username;
+	$_SESSION['first'] = $first;
+}
+
 function register_user($conn, $username, $password, $first, $last, $admin = 0){
 	//setup prepared statement
 	$statement = $conn->prepare("INSERT INTO users (username, password, first, last, admin) VALUES (?, ?, ?, ?, ?)");

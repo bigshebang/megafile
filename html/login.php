@@ -31,8 +31,7 @@ if($post && !$error){
             $error = "Invalid username or password.";
         else{
             session_start();
-            $_SESSION['id'] = $login['id'];
-            $_SESSION['first'] = $login['first'];
+            set_login_session_values($login['id'], $username, $login['first']);
             header('Location: /');
             die();
         }
