@@ -23,9 +23,9 @@ CREATE TABLE files (
 );
 
 CREATE TABLE shares (
-	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	ownerid INT NOT NULL,
 	shareid INT NOT NULL,
+	PRIMARY KEY (ownerid, shareid),
 	FOREIGN KEY (ownerid) REFERENCES users(id),
 	FOREIGN KEY (shareid) REFERENCES users(id)
 );
