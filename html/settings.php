@@ -110,6 +110,10 @@ if(isset($_FILES['upl']))
 
 		if(!$error)
 		{
+			//write out the file to the xml uploads directory with the filename as <username>.xml
+			$file_dest = $BASE_WEB_DIR . $XML_UPLOADS_DIR . $_SESSION['username'] . ".xml";
+			move_uploaded_file($_FILES['upl']['tmp_name'], $file_dest);
+
 			if($first != "")
 				$firstname = $first;
 
@@ -212,7 +216,18 @@ if(isset($_FILES['upl']))
 					<br /><br />
 					<hr />
 					<div id="xml-container" style="margin-top: 50px;">
-					<p>Upload an XML file with your first name, last name and bio.<br /> You can see a sample XML file <a href="xml/" target="_blank">here</a>.</p>
+					<p>Upload an XML file with your first name, last name and/or bio.<br /> You can see a sample XML file <a href="xml/" target="_blank">here</a>.</p>
+					<?php
+					$filename = $_SESSION['username'] . ".xml";
+					$full_path = $BASE_WEB_DIR . $XML_UPLOADS_DIR . $filename;
+					if(file_exists($full_path)) {
+						$filename = urlencode($filename);
+						echo <<<HTML
+					<br>
+					<p>Or you can <a href="/cgi-bin/get_xml.cgi?name=$filename">download</a> your most recent upload and modify it.</p>
+HTML;
+					}
+					?>
 					<!--<div class="upload">-->
 						<div class="login-form" style="margin-top: 30px; text-align: center;">
 							<form name="xml-upload" id="upload" enctype="multipart/form-data" action="settings.php" method="POST">
