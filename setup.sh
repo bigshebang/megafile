@@ -16,3 +16,8 @@ sudo apt install $packages -y
 #set up DB stuff
 mysql -u "$DB_USER" -p"$DB_USER" < create_db.sql
 mysql -u "$DB_USER" -p"$DB_USER" < create_user.sql
+
+
+#set up perl CGI stuff
+sudo a2enmod perl cgi
+sudo sed -i 's|/usr/lib/cgi-bin|/var/www/megafile/cgi-bin|' /etc/apache2/conf-enabled/serve-cgi-bin.conf
