@@ -84,7 +84,10 @@ def add_new_share(db, shares_table, new_share):
 		)
 	except Exception as e:
 		print "had trouble inserting new share:", e
-		return e.message
+		if hasattr(e, "message"):
+			return e.message
+		else:
+			return "DB insertion failed, couldn't get the exception message"
 
 	return True
 
