@@ -4,6 +4,4 @@ php7.0
 php7.0-mysql
 php7.0-xml
 libapache2-mod-php7.0
-python-redis
-python-sqlalchemy
-python-pymysql
+python-flask
