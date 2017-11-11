@@ -46,6 +46,13 @@ CREATE TABLE xml_uploads (
 	FOREIGN KEY (uploader_id) REFERENCES users(id)
 );
 
+CREATE TABLE redis_logs (
+	id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	message varchar(4096) NOT NULL,
+	db_result varchar(2048),
+	attempt_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 # create admin user with password of 'password', so you should change it
 INSERT INTO users (username, password, first, last, bio, admin) VALUES (
 	'admin',
