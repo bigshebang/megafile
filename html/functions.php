@@ -9,7 +9,7 @@ $XML_UPLOADS_DIR = "xml_uploads/";
 $VALID_USERNAME = "/^[a-zA-Z0-9\-_]+$/";
 
 function connect_to_db($find = 0){
-	$db_config = parse_ini_file("../config.ini", true)['sql']; #get settings from config file
+	$db_config = parse_ini_file("../config.dev.ini", true)['sql']; #get settings from config file
 
 	//need to determine which user we need here so we get the right user and pass
 	//TODO: change these from numbers to strings
