@@ -35,8 +35,8 @@
 									<p>All of our users can enjoy our intuitive user interface for uploading and downloading files with ease and simplicity.</p>
 								</div>
 										<div class="col-md-4 column our-feat">
-									<h3>Public Key Management (Beta)</h3>
-									<p>We offer a public/private key pair management service to simplify managing multiple key pairs. This service is in beta at this time and is only being offered to our premium members.</p>
+									<h3>Integrating Top Tech</h3>
+									<p>We've recently made an acquisition in the cybersecurity space of a disruptive startup. Over the next several months we'll be integrating their award winning defense systems into our products.</p>
 								</div>
 							</div>
 							<div class="clearfix"> </div>
