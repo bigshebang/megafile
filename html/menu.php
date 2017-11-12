@@ -18,6 +18,7 @@
 								if(isset($_SESSION['id']))
 								{
 									echo <<<OUT
+								<li><a href="dev.php"><span data-hover="Dev">Dev</span></a></li>
 								<li><a href="upload.php"><span data-hover="Upload">Upload</span></a></li>
 								<li><a href="share.php"><span data-hover="Share Files">Share Files</span></a></li>
 								<li><a href="settings.php"><span data-hover="Settings">Settings</span></a></li>
