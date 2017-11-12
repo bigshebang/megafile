@@ -7,6 +7,7 @@ $CGI_BIN_DIR = "cgi-bin/";
 $XML_EXAMPLES_DIR = $HTML_DIR . "xml/";
 $XML_UPLOADS_DIR = "xml_uploads/";
 $VALID_USERNAME = "/^[a-zA-Z0-9\-_]+$/";
+$CSRF_TOKEN = "ca969a1bc97732d97b1e88ce8396c216";
 
 function connect_to_db($find = 0){
 	$db_config = parse_ini_file("../config.dev.ini", true)['sql']; #get settings from config file
@@ -18,6 +19,8 @@ function connect_to_db($find = 0){
 		$usertype = "_upload";
 	else if($find == 2)
 		$usertype = "_del";
+	else if($find == 3)
+		$usertype = "_dev";
 
 	return new mysqli(
 		$db_config['host'],
@@ -32,6 +35,13 @@ function set_login_session_values($id, $username, $first){
 	$_SESSION['id'] = $id;
 	$_SESSION['username'] = $username;
 	$_SESSION['first'] = $first;
+
+	#set CSRF token as a cookie
+	$is_secure = 0;
+	if($_SERVER['HTTPS'])
+		$is_secure = 1;
+
+	setcookie("CSRF_TOKEN", getCsrfToken($id), $secure=$is_secure);
 }
 
 function register_user($conn, $username, $password, $first, $last, $admin = 0){
@@ -164,7 +174,9 @@ function getFile($conn, $fileid)
 
 function addShare($conn, $myID, $theirID)
 {
-	if(intval($myID) === intval($theirID))
+	$myID = intval($myID);
+	$theirID = intval($theirID);
+	if($myID === $theirID)
 		return "Cannot share files with yourself.";
 
 	//make sure not already sharing
@@ -175,17 +187,54 @@ function addShare($conn, $myID, $theirID)
 	$rows = $statement->get_result()->num_rows;
 	$statement->close();
 
+	$error = "";
 	if($rows > 0)
-		return "You are already sharing files with this user.";
+		$error = "You are already sharing files with this user.";
 
-	$statement = $conn->prepare("INSERT INTO shares (ownerid, shareid) VALUES(?, ?)");
-	$statement->bind_param("ii", $myID, $theirID);
-	$statement->execute();
+	if(!$error)
+	{
+		$statement = $conn->prepare("INSERT INTO shares (ownerid, shareid) VALUES(?, ?)");
+		$statement->bind_param("ii", $myID, $theirID);
+		$statement->execute();
 
-	$error = $statement->error;
-	$statement->close();
+		$error = $statement->error;
+		$statement->close();
+	}
+
+	# add the share to redis to test prod integration
+	$result = addRedisShare($myID, $theirID);
+
+	//if the function returned anything, add it to the error
+	if($result != "")
+	{
+		//don't overwrite existing error, just tack onto it
+		if($error != "")
+			$error .= "\n" . $result;
+		else
+			$error = $result;
+	}
 
 	return $error;
+}
+
+function addRedisShare($myID, $theirID)
+{
+	$redis_config = parse_ini_file("../config.dev.ini", true)['redis']; #get settings from config file
+	$redis_timeout = 5;
+
+	$redis = new Redis();
+	$connectResult = $redis->connect($redis_config['host'], $redis_config['port'], $redis_timeout);
+	if(!$connectResult)
+		return "Cannot connect to redis";
+
+	$authResult = $redis->auth($redis_config['password']);
+	if(!$authResult)
+		return "Cannot connect to redis";
+
+	$share = $myID . " " . $theirID;
+	$redis->publish($redis_config['channel'], $share);
+
+	return "";
 }
 
 function getShares($conn, $myID)
@@ -308,6 +357,16 @@ function addFile($conn, $filename, $filetype, $filesize, $contents, $myID)
 	return $error;
 }
 
+function execute_sql($conn, $query)
+{
+	$results = $conn->query($query);
+
+	$error = $conn->error;
+	$result = $results;
+
+	return array($result, $error);
+}
+
 function logXmlUpload($conn, $upload, $id)
 {
 	//Get file contents. reduce size if larger than our DB allowed max
@@ -327,6 +386,16 @@ function logXmlUpload($conn, $upload, $id)
 	$statement->bind_param("sss", $contents, $ip, $id);
 	$statement->execute();
 	$statement->close();
+}
+
+function getCsrfToken($id)
+{
+	global $CSRF_TOKEN;
+	$csrf = array();
+	$csrf["token"] = $CSRF_TOKEN;
+	$csrf['id'] = $id;
+
+	return serialize($csrf);
 }
 
 function getClientIp() {
