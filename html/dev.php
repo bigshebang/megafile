@@ -70,11 +70,7 @@ TOP;
 				}
 				else
 				{
-					// $i = 0;
 					$row = $result[0]->fetch_assoc();
-					print "row: ";
-					print_r($row);
-					print "\n<br>";
 					$columns = array();
 					$rowStr = "";
 
