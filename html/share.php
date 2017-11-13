@@ -118,7 +118,7 @@ $conn->close();
 <!--coustom css-->
 <link href="css/style.css" rel="stylesheet" type="text/css"/>
 <!--fonts-->
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,800italic,800,700italic,700,600,600italic' rel='stylesheet' type='text/css'>
+<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,800italic,800,700italic,700,600,600italic' rel='stylesheet' type='text/css'>
 <!--/fonts-->
 <!--script-->
 <script src="js/jquery.min.js"> </script>
