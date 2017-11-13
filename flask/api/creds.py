@@ -20,7 +20,7 @@ class Creds(Resource):
 	def get(self):
 		args = self.parser.parse_args()
 		creds = {}
-		# sleep(random_sleep_time(30, 100))
+		sleep(random_sleep_time(30, 100))
 
 		#if they give redis, reject them
 		if "redis" in args['cred'].lower():
