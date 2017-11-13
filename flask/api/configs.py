@@ -6,14 +6,8 @@ from .utils import random_sleep_time
 
 ns = Namespace('configs', description='Fetches configs for servers, networking devices and appliances')
 
-#configs = ns.model('Configs', {
-#	'url': fields.String(required=False, description='The URL to fetch')
-#})
-
 @ns.route('/')
 class Configs(Resource):
-	# @ns.doc('fetch_document')
-	# @ns.doc(params={"url": "url to fetch configs from"})
 	parser = reqparse.RequestParser()
 	parser.add_argument(
 		'url',
