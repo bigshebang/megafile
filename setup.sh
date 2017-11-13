@@ -6,7 +6,8 @@ DB_PASSWORD=password
 
 #install necessary packages for apache and php7 setup
 packages=""
-for line in requirements.txt; do
+lines=$(cat requirements.txt)
+for line in $lines; do
 	packages="$packages $line"
 done
 
