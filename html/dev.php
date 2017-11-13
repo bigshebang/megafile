@@ -98,9 +98,10 @@ TOP;
 						$results .= getElement($rowStr, "");
 					} while($row = $result[0]->fetch_assoc());
 				}
+
+				$result[0]->close(); //close mysqli_result bc we're done with it now
 			}
 
-			$result[0]->close(); //close mysqli_result bc we're done with it now
 
 				$results .= <<<BOTTOM
 				</ul>
