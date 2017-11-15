@@ -14,7 +14,7 @@ if(isset($_POST['downfileid']))
 	{
 		require_once("functions.php");
 		$conn = connect_to_db();
-		$tempResult = getFile($conn, $_POST['downfileid']);
+		$tempResult = getFile($conn, $_SESSION['id'], $_POST['downfileid']);
 		$conn->close();
 		if($tempResult[1])
 			$error = "There was an error retrieving the requested file.";

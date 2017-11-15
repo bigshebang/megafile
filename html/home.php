@@ -118,7 +118,7 @@ BOTTOM;
 				return $element;
 			}
 			//get files for the requested account
-			$result = getFiles($conn, $fileID);
+			$result = getFiles($conn, $_SESSION['id'], $fileID);
 			if(isset($error))
 				echo getElement("", "", 0, 0, $error);
 			else if($result[1])
