@@ -136,10 +136,32 @@ function lookup_user($conn, $id){
 	return array($result, $error);
 }
 
-function getFiles($conn, $accountID)
+function getFiles($conn, $requesterID, $ownerID)
 {
+	//if either ID is zero, that's a problem. there are no IDs of 0
+	$requesterID = intval($requesterID);
+	$ownerID = intval($ownerID);
+	if($requesterID === 0 || $ownerID === 0)
+	{
+		$error = "bad ID";
+		return array("", $error);
+	}
+
+	//if the user isn't requesting to see their file list, make sure they allowed to see what
+	//they're requesting
+	if($requesterID !== $ownerID)
+	{
+		//check if the requested account is sharing with the requesting account
+		$isSharing = checkShare($conn, $ownerID, $requesterID);
+		if($isSharing === 0)
+		{
+			$error = "Hmm..that doesn't seem right";
+			return array("", $error);
+		}
+	}
+
 	$statement = $conn->prepare("SELECT id,name,size FROM files WHERE userid = ?");
-	$statement->bind_param("i", $accountID);
+	$statement->bind_param("i", $ownerID);
 	$statement->execute();
 
 	$error = $statement->error;
@@ -149,43 +171,123 @@ function getFiles($conn, $accountID)
 	return array($result, $error);
 }
 
-function getFile($conn, $fileid)
+function getFile($conn, $requesterID, $fileid)
 {
-	$statement =$conn->prepare("SELECT * FROM files WHERE id = ?");
-	$statement->bind_param("i", $fileid);
-	$statement->execute();
+	$isAuthorized = authorizedForFile($conn, $requesterID, $fileid);
+	$result = "";
+	$error = "";
 
-	$error = $statement->error;
-	$result = $statement->get_result()->fetch_array();
-	$statement->close();
+	if($isAuthorized === 1)
+	{
+		$statement = $conn->prepare("SELECT * FROM files WHERE id = ?");
+		$statement->bind_param("i", $fileid);
+		$statement->execute();
+
+		$error = $statement->error;
+		$result = $statement->get_result()->fetch_array();
+		$statement->close();
+	}
+	else
+	{
+		$error = "File not found";
+	}
 
 	return array($result, $error);
 }
 
-function addShare($conn, $myID, $theirID)
+function authorizedForFile($conn, $requesterID, $fileid)
 {
-	if(intval($myID) === intval($theirID))
+	$notAuthorized = 0;
+	$authorized = 1;
+
+	#check if the requesting ID has access to this file
+	#this means we check if the requesting ID owns the file first
+	$statement = $conn->prepare("SELECT id, userid from files WHERE id = ?");
+	$statement->bind_param("i", $fileid);
+	$statement->execute();
+	$error = $statement->error;
+	$result = $statement->get_result();
+	$statement->close();
+
+	//if any error given, fail closed
+	if($error)
+		return $notAuthorized;
+
+	//if there was a problem with the connection, fail closed
+	if(!$result)
+		return $notAuthorized;
+
+	//get the owner of the requested file
+	$row = $result->fetch_assoc();
+	$ownerID = intval($row['userid']);
+	$requesterID = intval($requesterID);
+
+	//if requesterID is zero, that's a problem. there are no IDs of 0
+	if($requesterID === 0)
+		return $notAuthorized;
+
+	//check if the requester owns the file
+	if ($ownerID === $requesterID)
+		return $authorized;
+
+	//check if the owner is sharing files with the requester
+	$isSharing = checkShare($conn, $ownerID, $requesterID);
+	if($isSharing === 1)
+		return $authorized;
+
+	return $notAuthorized;
+}
+
+function addShare($conn, $fromID, $toID)
+{
+	//if fromID is zero, that's a problem. there are no IDs of 0
+	$fromID = intval($fromID);
+	if($fromID === 0)
+		return "Hmm..something doesn't seem right";
+
+	if($fromID === intval($toID))
 		return "Cannot share files with yourself.";
 
 	//make sure not already sharing
-	$statement = $conn->prepare("SELECT * FROM shares WHERE ownerid = ? AND "
-								. "shareid = ?");
-	$statement->bind_param("ii", $myID, $theirID);
-	$statement->execute();
-	$rows = $statement->get_result()->num_rows;
-	$statement->close();
-
-	if($rows > 0)
+	$alreadySharing = checkShare($conn, $fromID, $toID);
+	if($alreadySharing === 1)
 		return "You are already sharing files with this user.";
 
 	$statement = $conn->prepare("INSERT INTO shares (ownerid, shareid) VALUES(?, ?)");
-	$statement->bind_param("ii", $myID, $theirID);
+	$statement->bind_param("ii", $fromID, $toID);
 	$statement->execute();
 
 	$error = $statement->error;
 	$statement->close();
 
 	return $error;
+}
+
+//checks to see if fromID is sharing to toID
+function checkShare($conn, $fromID, $toID)
+{
+	//if fromID is zero, that's a problem. there are no IDs of 0
+	//technically this should never be called without being checked, but let's be safe
+	$fromID = intval($fromID);
+	if($fromID === 0)
+		return 0;
+
+	//if the user is the same, technically they're "sharing"
+	//shouldn't get here, but let's be safe. and lack of time to test
+	if($fromID === intval($toID))
+		return 1;
+
+	$statement = $conn->prepare("SELECT * FROM shares WHERE ownerid = ? AND "
+								. "shareid = ?");
+	$statement->bind_param("ii", $fromID, $toID);
+	$statement->execute();
+	$rows = $statement->get_result()->num_rows;
+	$statement->close();
+
+	if($rows > 0)
+		return 1;
+	else
+		return 0;
 }
 
 function getShares($conn, $myID)
