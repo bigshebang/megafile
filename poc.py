@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import requests, json, re, code
+import requests, json, re
 from hashlib import sha512
 import os.path
 from ConfigParser import ConfigParser
