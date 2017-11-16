@@ -59,7 +59,7 @@ def create_user(server, session):
 	Make request to web app to create a user; return creds and php session ID
 	'''
 	creds = {
-		"user": "iamthebestuser-test4",
+		"user": "iamthebestuser-test",
 		"password": "i like passwords, they are the bestest!123"
 	}
 
