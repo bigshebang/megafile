@@ -106,9 +106,9 @@ def login_user(server, creds, session):
 	}
 
 	endpoint = "login.php"
-	r = requests.post(server, data=data, cookies=session, allow_redirects=False)
+	r = requests.post(server + endpoint, data=data, cookies=session, allow_redirects=False)
 	if r.status_code == 302 and r.headers['Location'] == "/":
-		return r.cookies[session_cookie_name]
+		return True
 
 	return None
 
@@ -303,7 +303,7 @@ def main():
 			#login to prod
 			result = login_user(prod_server, creds, prod_session)
 			if not result:
-				print "problem logging in"
+				print "problem logging into prod"
 				return -1
 
 			#our prod_cookie has changed, so rewrite creds to output file
@@ -320,13 +320,13 @@ def main():
 				creds['dev_cookie'] = dev_cookie
 				dev_session.set(session_cookie_name, dev_cookie, domain=dev_domain)
 			else:
-				print "problem gettign PHPSESSID"
+				print "problem getting PHPSESSID"
 				return -1
 
 			#login to dev
 			result = login_user(dev_server, creds, dev_session)
 			if not result:
-				print "problem logging in"
+				print "problem logging into dev"
 				return -1
 
 			#our dev_cookie has changed, so rewrite creds to output file
