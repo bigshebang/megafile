@@ -40,7 +40,7 @@ def create_db_conn(db_conf):
 
 	return create_engine(conn_string)
 
-def log_share_attempt(db, redis_log_table, message):
+def log_share_attempt(db, redis_log_table, message, second_time=False):
 	try:
 		result = db.execute(
 			redis_log_table.insert().values(
@@ -51,7 +51,15 @@ def log_share_attempt(db, redis_log_table, message):
 		primary_key = result.inserted_primary_key
 		return primary_key
 	except Exception as e:
-		print "had trouble inserting redis log:", e
+		# if it was the first call and things failed, try calling again because if the session
+		# goes dormant for a while without any data flow, the first operation fails.
+		if not second_time:
+			print "had trouble inserting redis log, it's probably because the session was idle for too long:", e
+			return log_share_attempt(db, redis_log_table, message, True)
+		# this is the second time in a row calling it, so that means it's not an idle issue
+		else:
+			print "had trouble inserting redis log:", e
+
 		return None
 
 	return None
