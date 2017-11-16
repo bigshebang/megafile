@@ -378,15 +378,16 @@ def main():
 
 	print
 
-	print "attempting to get the target file, in case we've already done the exploiting..."
-	result = get_regular_file(prod_server, prod_session, target_file_id, rocketman_file)
-	if result['flag']:
-		print "[+] we got the file! flag: {}".format(result['flag'])
-		# return 0
-	else:
-		print "couldn't get the file, we'll exploit things then try again later"
+	# comment this out because each time this is run, we want to verify the whole chain of events works
+	# print "attempting to get the target file, in case we've already done the exploiting..."
+	# result = get_regular_file(prod_server, prod_session, target_file_id, rocketman_file)
+	# if result['flag']:
+	# 	print "[+] we got the file! flag: {}".format(result['flag'])
+	# 	# return 0
+	# else:
+	# 	print "couldn't get the file, we'll exploit things then try again later"
 
-	print
+	# print
 
 	# get redis parameters from config.ini
 	redis = get_config_file(prod_config_file, prod_session, creds)
