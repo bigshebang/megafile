@@ -6,7 +6,8 @@ DB_PASSWORD=password
 
 #install necessary packages for apache and php7 setup
 packages=""
-for line in requirements.txt; do
+lines=$(cat requirements.txt)
+for line in $lines; do
 	packages="$packages $line"
 done
 
@@ -18,6 +19,5 @@ mysql -u "$DB_USER" -p"$DB_USER" < create_db.sql
 mysql -u "$DB_USER" -p"$DB_USER" < create_user.sql
 
 
-#set up perl CGI stuff
-sudo a2enmod perl cgi
-sudo sed -i 's|/usr/lib/cgi-bin|/var/www/megafile/cgi-bin|' /etc/apache2/conf-enabled/serve-cgi-bin.conf
+#enable mod_headers
+sudo a2enmod  headers

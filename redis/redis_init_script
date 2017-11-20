@@ -7,7 +7,7 @@ REDISPORT=6379
 CONF_FILE=redis
 EXEC=/usr/local/bin/redis-server
 CLIEXEC=/usr/local/bin/redis-cli
-PASSWORD=password
+PASSWORD="f2ca143fc4fd33f6dfcec811e4d19f3cb017a8b904535195037b970e401d0ce2fa40320b9169bafb38f08c5db216803a2f267f0f243b17c65bd48fae92dc3609"
 SHUTDOWN="f7c7d0ed0e1d9313a8192805bb6a8221539c95270ad90ed017d5110121c3c0371772724678526f7d9a897c22e8043fb197804232c3f0d00917416c20f9e7cead"
 
 PIDFILE=/var/run/redis_${REDISPORT}.pid
@@ -39,7 +39,11 @@ case "$1" in
                 echo "Redis stopped"
         fi
         ;;
+    restart)
+        sudo /etc/init.d/redis stop
+        sudo /etc/init.d/redis start
+        ;;
     *)
-        echo "Please use start or stop as first argument"
+        echo "Please use start, stop or restart as first argument"
         ;;
 esac
