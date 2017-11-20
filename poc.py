@@ -36,7 +36,7 @@ prod_files = {
 
 dev_files = {
 	function_swp_file:
-		"bf17cd00407f4d7ff247354a1a30ac96a52b7d21df4c68ea5a4f3e7cae245e83c6a334be4fc9b5fba78dba5bf447df457d50751f2b7cb26e681b208b5d9f1144",
+		"456f23e6959780b2fe8f29f77ddfe883f928766c502ed374f56006f2e55a57eb90bccb95b52b58655f6a31709c6e819032be9fdd3db303cdbe4bb478dd56e565",
 	report_uri_swp_file:
 		"4a65ca937c901c6f3c052c35cd1d40b2073b492ef5c56a41f649bc0b78d300aad02ab585cbc063bbbb4b69c1967076c2a0819b919cc909986e67db921a303bd9",
 	#first one is just the file hash. second one is the HTTP response hash
