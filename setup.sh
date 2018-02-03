@@ -9,6 +9,10 @@
 #i should probably note that requirements.txt in the root isn't the typical
 #	pip packages for a python project, it's apt packages instead because i'm
 #	dirty. but flask/requirements.txt does have pip packages in it
+#one additional thing is that share_transfer.py needs to be run on the data
+#	store box. it should run infinitely, you just need to background the
+#	process or leave it in a tmux session. it'll log to syslog if you set it
+#	up as a systemd service.
 
 DB_USER=root
 DB_PASSWORD=password
