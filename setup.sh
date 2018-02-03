@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 #only tested on ubuntu 16.04 base image/install
+
+#Instructions notes i guess
+#run this on the app server and it should install all the necessary packages
+#the packages for data storage (mysql and redis) are not included here because
+#	they are meant to be installed on a separate server which is just a data
+#	store server. also there's no ubuntu package for redis
+#i should probably note that requirements.txt in the root isn't the typical
+#	pip packages for a python project, it's apt packages instead because i'm
+#	dirty. but flask/requirements.txt does have pip packages in it
+
 DB_USER=root
 DB_PASSWORD=password
 
